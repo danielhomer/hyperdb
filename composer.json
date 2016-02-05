@@ -1,0 +1,20 @@
+{
+	"name"       : "danielhomer/hyperdb",
+	"description": "HyperDB is an advanced database class that supports replication, failover, load balancing, and partitioning.",
+	"homepage"   : "https://github.com/danielhomer/hyperdb",
+	"type"       : "wordpress-plugin",
+	"license"    : "GPL-2.0+",
+	"authors"    : [
+		{
+			"name"    : "Automattic",
+			"homepage": "https://automattic.com/"
+		}
+		{
+			"name"    : "Daniel Homer",
+			"homepage": "http://danielhomer.me/"
+		}
+	],
+	"require": {
+		"composer/installers": "~1.0"
+	}
+}
