@@ -884,14 +884,34 @@ class hyperdb extends wpdb {
 	function has_cap( $db_cap, $dbh_or_table = false ) {
 		$version = $this->db_version( $dbh_or_table );
 
-		switch ( strtolower( $db_cap ) ) :
-		case 'collation' :
-		case 'group_concat' :
-		case 'subqueries' :
-			return version_compare($version, '4.1', '>=');
-		case 'set_charset' :
-			return version_compare($version, '5.0.7', '>=');
-		endswitch;
+		switch ( strtolower( $db_cap ) ) {
+			case 'collation' :
+			case 'group_concat' :
+			case 'subqueries' :  
+				return version_compare( $version, '4.1', '>=' );
+			case 'set_charset' :
+				return version_compare( $version, '5.0.7', '>=' );
+			case 'utf8mb4' :
+				if ( version_compare( $version, '5.5.3', '<' ) ) {
+					return false;
+				}
+				if ( $this->use_mysqli ) {
+					$client_version = mysqli_get_client_info();
+				} else {
+					$client_version = mysql_get_client_info();
+				}
+
+				/*
+				 * libmysql has supported utf8mb4 since 5.5.3, same as the MySQL server.
+				 * mysqlnd has supported utf8mb4 since 5.0.9.
+				 */
+				if ( false !== strpos( $client_version, 'mysqlnd' ) ) {
+					$client_version = preg_replace( '/^\D+([\d.]+).*/', '$1', $client_version );
+					return version_compare( $client_version, '5.0.9', '>=' );
+				} else {
+					return version_compare( $client_version, '5.5.3', '>=' );
+				}
+		}
 
 		return false;
 	}
