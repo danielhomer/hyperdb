@@ -208,6 +208,14 @@ class hyperdb extends wpdb {
 
 		if ( defined( 'DB_CHARSET' ) )
 			$this->charset = DB_CHARSET;
+			
+		if ( 'utf8' === $this->charset && $this->has_cap( 'utf8mb4' ) ) {
+			$this->charset = 'utf8mb4';
+		}
+
+		if ( 'utf8mb4' === $this->charset && ( ! $this->collate || stripos( $this->collate, 'utf8_' ) === 0 ) ) {
+			$this->collate = 'utf8mb4_unicode_ci';
+		}
 	}
 
 	/**
